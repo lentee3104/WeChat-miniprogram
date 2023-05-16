@@ -1,10 +1,2 @@
-<!--pages/test/test01.wxml-->
-<text>2023.5.16 1:40 test</text>
-<view class="container" bindtap="redirectToIndex">
-  <text>点击我跳转到index页面</text>
-</view>
-<view class="container1">
-  <view>A</view>
-  <view>B</view>
-  <view>C</view>
-</view>
+<canvas id="myCanvas" type="2d" />
+<button bindtap="chooseImage">选择图片</button>
