@@ -1,0 +1,40 @@
+/* pages/test/test01.wxss */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 24rpx;
+}
+.container text{
+  width: 90%;
+  height: 40px;
+  text-align: center;
+  background-color: moccasin;
+  font-size: 25px;
+  border-radius: 5px;
+}
+
+.container1{
+  display: flex;
+  justify-content: space-around;
+}
+
+.container1 view{
+  width: 100px;
+  height:100px;
+  text-align: center;
+  line-height: 100px;
+  border-radius: 10px;
+}
+
+.container1 view:nth-child(1){
+  background-color: lightgreen;
+}
+.container1 view:nth-child(2){
+  background-color: lightslategray;
+}
+.container1 view:nth-child(3){
+  background-color: lightseagreen;
+}

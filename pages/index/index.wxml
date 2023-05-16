@@ -1,0 +1,5 @@
+<!-- 在WXML文件中添加一个画布 -->
+<canvas type="2d" id="myCanvas" style="width: auto; height: auto;"></canvas>
+
+<!-- 在WXML文件中添加一个上传图片按钮 -->
+<button bindtap="uploadImage">上传图片</button>
