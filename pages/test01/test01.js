@@ -69,77 +69,57 @@ Page({
   },
 
   // 选择图片
-  chooseImage: function(){
-    wx.chooseMedia({
-      count: 1,
-      mediaType: ['image'],
-      sourceType: ['album', 'camera'],
-      success: function (res){
-        //判断用户是否选择了文件
-        if(res.tempFiles && res.tempFiles.length > 0){
-          // 选择成功后，获取图片本地路径
-          var imagePath = res.tempFiles[0].tempFilePath;
-          // 根据图片路径创建一个canvas对象
-          //画布大小初始化
-          wx.createSelectorQuery()
-            .select('myCanvas') // 在 WXML 中填入的 id
-            .fields({ node: true, size: true })
-            .exec((res) => {
-              // Canvas 对象
-              var canvas = res[0].node
-              // Canvas 画布的实际绘制宽高
-              var renderWidth = res[0].width
-              var renderHeight = res[0].height
-              // Canvas 绘制上下文
-              var ctx = canvas.getContext('2d')
-
-              // 初始化画布大小
-              var dpr = wx.getWindowInfo().pixelRatio
-              canvas.width = renderWidth * dpr
-              canvas.height = renderHeight * dpr
-              ctx.scale(dpr, dpr)
-            })
-          // 绘制上传的图片到canvas中
-          var ctx = canvas.createImage()
-          ctx.onload = () => {
-            context.drawImage(ctx,0,0,150,100,)
-          }
-          ctx.src = '/pages/test01/tempFile/test01.jpg'
+  // 选择图片
+  pictureProcessing: function(){
+  // 选择图片
+wx.chooseImage({
+  count: 1,
+  sizeType: ['original', 'compressed'],
+  sourceType: ['album', 'camera'],
+  success: function (res) {
+    // 判断是否选择了文件
+    if (res.tempFiles && res.tempFiles.length > 0) {
+      // 获取图片本地路径
+      var imagePath = res.tempFilePaths[0];
+      // 创建一个离屏 canvas
+      var offscreenCanvas = wx.createCanvasContext('myCanvas');
+      // 获取图片信息
+      wx.getImageInfo({
+        src: imagePath,
+        success: function (imageInfo) {
+          // 将选择的图片绘制到离屏 canvas 上
+          offscreenCanvas.drawImage(imageInfo.path, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
           // 对图片进行处理，比如添加滤镜
-          ctx.filter = 'grayscale(100%)';
-          // 将处理后的图片导出为本地临时文件
-          ctx.draw(false, function() {
+          offscreenCanvas.filter = 'grayscale(100%)';
+          // 将处理后的图片绘制到屏幕上
+          offscreenCanvas.draw(false, function() {
+            // 生成处理后的图片，并将其展示在小程序上
             wx.canvasToTempFilePath({
+              x: 0,
+              y: 0,
+              width: offscreenCanvas.width,
+              height: offscreenCanvas.height,
               canvasId: 'myCanvas',
-              success: function (res) {
-                // 导出成功后，展示处理后的图片
-                wx.saveImageToPhotosAlbum({
-                  filePath: res.tempFilePath,
-                  success: function() {
-                    wx.showToast({
-                      title: '保存成功',
-                      icon: 'success'
-                    })
-                  },
-                  fail: function() {
-                    wx.showToast({
-                      title: '保存失败',
-                      icon: 'none'
-                    })
-                  }
-                })
+              success: function(res) {
+                wx.previewImage({
+                  urls: [res.tempFilePath]
+                });
               }
             });
           });
-        }else{
-          // 用户取消了选择文件的操作，不进行任何处理
-          console.log('用户取消了选择文件的操作');
+        },
+        fail: function (res) {
+          console.log(res);
         }
-      },
-      fail: function(res) {
-        console.log(res);
-      }
-    })
+      });
+    } else {
+      // 用户取消了选择文件的操作，不进行任何处理
+      console.log('用户取消了选择文件的操作');
+    }
+  },
+  fail: function (res) {
+    console.log(res);
   }
-
+})
+  }
 })

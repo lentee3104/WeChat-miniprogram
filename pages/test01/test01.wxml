@@ -1,2 +1,2 @@
 <canvas id="myCanvas" type="2d" />
-<button bindtap="chooseImage">选择图片</button>
+<button bindtap="pictureProcessing">选择图片</button>
